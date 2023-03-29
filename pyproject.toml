@@ -1,0 +1,32 @@
+[project]
+name = "hacktheclone"
+readme = "README.md"
+version = "0.0.1"
+requires-python = ">=3.10"
+dependencies = [
+    "streamlit",
+    "docker",
+    "SQLAlchemy"
+]
+
+[project.optional-dependencies]
+dev = ["pytest", "black", "ruff", "isort", "mypy", "pre-commit"]
+
+[mypy]
+check_untyped_defs = true
+disallow_any_generics = true
+disallow_incomplete_defs = true
+disallow_untyped_defs = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+
+[tool.black]
+line-length = 90
+
+[tool.isort]
+profile = "black"
+
+[tool.ruff]
+ignore = [
+    "E501", # line too long
+]
