@@ -12,8 +12,8 @@ all: run clean
 run: $(BIN)/activate
 	./$(VENV)/bin/python3 -m streamlit run src/app.py
 
-$(BIN)/activate: requirements-dev.txt
-	$(PYTHON) -m piptools sync ./requirements-dev.txt
+$(BIN)/activate: requirements.txt
+	$(PYTHON) -m piptools sync ./requirements.txt
 
 install:
 	$(PI) install virtualenv
