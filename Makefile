@@ -1,15 +1,19 @@
+# define the name of the virtual environment directory
+VENV = .venv
 PY = python3
 PI = pip3
-VENV = .venv
+
 BIN=$(VENV)/bin
-
-ifeq ($(OS), Windows_NT)
-    BIN=$(VENV)/Scripts
-    PY=python
-endif
-
 PYTHON = $(BIN)/$(PY)
 PIP = $(BIN)/$(PI)
+
+all: run clean
+
+run: $(BIN)/activate
+	./$(VENV)/bin/python3 -m streamlit run src/app.py
+
+$(BIN)/activate: requirements-dev.txt
+	$(PYTHON) -m piptools sync ./requirements-dev.txt
 
 install:
 	$(PI) install virtualenv
@@ -18,11 +22,9 @@ install:
 	$(PYTHON) -m piptools sync ./requirements-dev.txt
 	$(PYTHON) -m pre_commit install
 
-run:
-	$(PYTHON) -m streamlit run src/app.py
-
 clean:
 	rm -rf .mypy_cache
 	rm -rf .ruff_cache
-	rm -rf .pytest_cache
-	find . -name '__pycache__' -type d -exec rm -rf {} +
+	find . -type f -name '*.pyc' -delete
+
+.PHONY: all run clean
