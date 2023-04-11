@@ -19,6 +19,10 @@ class MachineController:
     def container_list(self) -> list[Container]:
         return self.client.containers.list(all=True)
 
+    def get_container_ip(self, container: Container) -> str:
+        network = self.client.networks.get("bridge").attrs["Containers"]
+        return network[container.id]["IPv4Address"].split("/")[0]
+
     def build_image(self, machine_path: Path) -> Image:
         folder_name = machine_path.name
         tag = f"hacktheclone_{folder_name}"
@@ -27,7 +31,9 @@ class MachineController:
 
     def run_machine(self, image: Image) -> Container:
         if not self.running_machine:
-            self.running_machine = self.client.containers.run(image=image, detach=True)
+            self.running_machine = self.client.containers.run(
+                image=image, detach=True, network_mode="bridge"
+            )
             return self.running_machine
 
         raise RuntimeError("Machine already running - Stop it first")
