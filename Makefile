@@ -19,7 +19,7 @@ install:
 	$(PI) install virtualenv
 	$(PY) -m virtualenv $(VENV)
 	$(PIP) install pip-tools
-	$(PYTHON) -m piptools sync ./requirements-dev.txt
+	$(PYTHON) -m piptools sync ./requirements.txt
 	$(PYTHON) -m pre_commit install
 
 clean:
