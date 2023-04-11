@@ -9,10 +9,10 @@ PIP = $(BIN)/$(PI)
 
 all: run clean
 
-run: $(BIN)/activate
+run:
 	./$(VENV)/bin/python3 -m streamlit run src/app.py
 
-$(BIN)/activate: requirements.txt
+update: requirements.txt
 	$(PYTHON) -m piptools sync ./requirements.txt
 
 install:
@@ -27,4 +27,4 @@ clean:
 	rm -rf .ruff_cache
 	find . -type f -name '*.pyc' -delete
 
-.PHONY: all run clean
+.PHONY: all run clean update
