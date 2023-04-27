@@ -13,7 +13,7 @@ class DBManager:
         self.engine = create_engine(rf"sqlite:///{self.db_path}")
 
     # ADD METHODS
-    def add_machine(self, user_id: int, image_id: int) -> None:
+    def add_machine(self, user_id: int, image_id: int, container_id: str) -> None:
         with Session(self.engine) as session:
             user = session.query(User).filter(User.id == user_id).first()
             image = session.query(Image).filter(Image.id == image_id).first()
@@ -23,6 +23,7 @@ class DBManager:
                     user_id=user_id,
                     status="down",
                     image_id=image_id,
+                    container_id=container_id,
                 )
 
                 user.machines.append(machine)
