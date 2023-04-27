@@ -22,19 +22,21 @@ class Machine(Base):
     __tablename__ = "machine"
 
     id: Mapped[int] = mapped_column(Integer(), primary_key=True)
-    flag: Mapped[str] = mapped_column(String(50))
     status: Mapped[str] = mapped_column(String(10))
     user_id: Mapped[int] = mapped_column(Integer(), ForeignKey("user.id"))
     image_id: Mapped[int] = mapped_column(Integer(), ForeignKey("image.id"))
+    container_id: Mapped[str] = mapped_column(String(50))
 
-    def __str__(self) -> str:
-        return f"MAHINE - {self.flag}"
+    def __repr__(self) -> str:
+        return f"MAHINE - {self.status}"
 
 
 class Image(Base):
     __tablename__ = "image"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    flag: Mapped[str] = mapped_column(String(50))
     image_name: Mapped[str] = mapped_column(String(30))
+    picture_path: Mapped[str] = mapped_column(String(50))
     machines = relationship("Machine", backref="image", cascade="all, delete-orphan")
 
     def __repr__(self) -> str:
