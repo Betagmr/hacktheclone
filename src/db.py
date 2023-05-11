@@ -1,7 +1,7 @@
 from hashlib import md5
 from pathlib import Path
 
-from sqlalchemy import or_
+from sqlalchemy import and_
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
@@ -87,7 +87,7 @@ class DBManager:
             user = (
                 session.query(User.username, User.password)
                 .filter(
-                    or_(
+                    and_(
                         User.username == username,
                         User.password == encrypted_password,
                     )
