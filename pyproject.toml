@@ -20,6 +20,7 @@ disallow_untyped_defs = true
 warn_redundant_casts = true
 warn_unused_ignores = true
 ignore_missing_imports = true
+exclude = ['test', '.venv']
 
 [tool.black]
 line-length = 90
@@ -30,4 +31,8 @@ profile = "black"
 [tool.ruff]
 ignore = [
     "E501", # line too long
+    "E712", # comparison to True should be 'if cond is True:' or 'if cond:'
 ]
+
+[tool.pytest.ini_options]
+pythonpath = ["src", "test", "."]
