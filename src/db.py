@@ -1,18 +1,17 @@
 from hashlib import md5
 from pathlib import Path
 
-from sqlalchemy import and_
-
-from sqlalchemy import create_engine
+from sqlalchemy import and_, create_engine
 from sqlalchemy.orm import Session
 
-from models import Image, Machine, User, Base
+from models import Base, Image, Machine, User
 
 
 class DBManager:
     def __init__(self) -> None:
-        self.db_path = Path().cwd() / "database.db"
-        self.engine = create_engine(rf"sqlite:///{self.db_path}")
+        self.db_path = Path().cwd() / "db.sqlite3"
+        self.engine = create_engine(rf"sqlite:///{self.db_path}", echo=True)
+        Base.metadata.create_all(self.engine)
 
     # ADD METHODS
     def add_machine(self, user_id: int, image_id: int, container_id: str) -> None:
@@ -94,6 +93,7 @@ class DBManager:
                 )
                 .first()
             )
+
         return user is not None
 
     def exists_username(self, username: str) -> bool:
@@ -130,10 +130,3 @@ class DBManager:
     def get_all_images(self) -> list[Image]:
         with Session(self.engine) as session:
             return session.query(Image).all()
-
-    def create_database(self) -> None:
-        print("Creating database...")
-        Base.metadata.create_all(self.engine)
-
-    def drop_database(self) -> None:
-        Base.metadata.drop_all(self.engine)

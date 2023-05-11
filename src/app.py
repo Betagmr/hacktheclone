@@ -1,10 +1,9 @@
-from config import Page
-
 import streamlit as st
 
+from config import Page
+from db import DBManager
 from login import login
 from register import register
-from db import DBManager
 
 
 def app() -> None:
@@ -32,19 +31,20 @@ def app() -> None:
 
         cont_col1, cont_col2, cont_col3 = st.columns([1, 1, 1])
         with cont_col1:
-            start_button = st.button("Start")
+            start_button = st.button("Start", use_container_width=True)
         with cont_col2:
-            resume_button = st.button("Stop")
+            resume_button = st.button("Stop", use_container_width=True)
         with cont_col3:
-            start_button = st.button("Reset")
+            start_button = st.button("Reset", use_container_width=True)
 
         st.write("")
 
-        root_field = st.text_input("", placeholder="root")
+        root_field = st.text_input("Flag", placeholder="Insert flag here...")
         submit = st.button("Submit", use_container_width=True)
 
     with col2:
-        st.image("containers/machine_1/images.png")
+        st.write("")
+        st.image("./assets/placeholder.png", use_column_width=True)
 
     if logoutbutton:
         st.session_state["islogged"] = Page.LOGIN
@@ -57,7 +57,6 @@ if __name__ == "__main__":
 
     if "database" not in st.session_state:
         st.session_state["database"] = DBManager()
-        st.session_state["database"].create_database()
 
     if st.session_state["islogged"] == Page.APP:
         app()
