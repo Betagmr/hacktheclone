@@ -1,10 +1,12 @@
 from hashlib import md5
 from pathlib import Path
 
+from sqlalchemy import or_
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 
-from models import Image, Machine, User
+from models import Image, Machine, User, Base
 
 
 class DBManager:
@@ -83,24 +85,37 @@ class DBManager:
         with Session(self.engine) as session:
             encrypted_password = md5(bytes(password, "utf-8")).hexdigest()
             user = (
+                session.query(User.username, User.password)
+                .filter(
+                    or_(
+                        User.username == username,
+                        User.password == encrypted_password,
+                    )
+                )
+                .first()
+            )
+        return user is not None
+
+    def exists_username(self, username: str) -> bool:
+        with Session(self.engine) as session:
+            user = (
                 session.query(User)
                 .filter(
                     User.username == username,
-                    User.password == encrypted_password,
                 )
                 .first()
             )
 
-            return user is not None
+        return user is not None
 
     def validate_flag(self, image_id: int, flag: str) -> bool:
         with Session(self.engine) as session:
             image = session.query(Image).filter(Image.id == image_id).first()
 
-            if image:
-                return image.flag == flag
+        if image:
+            return image.flag == flag
 
-            raise RuntimeError("Enter a valid image id")
+        raise RuntimeError("Enter a valid image id")
 
     # GET METHODS
     def get_user_machines(self, user_id: int) -> list[Machine]:
@@ -115,3 +130,10 @@ class DBManager:
     def get_all_images(self) -> list[Image]:
         with Session(self.engine) as session:
             return session.query(Image).all()
+
+    def create_database(self) -> None:
+        print("Creating database...")
+        Base.metadata.create_all(self.engine)
+
+    def drop_database(self) -> None:
+        Base.metadata.drop_all(self.engine)

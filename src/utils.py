@@ -5,8 +5,7 @@ from dataclasses import dataclass
 class MachineInfo():
     container_name: str
     flag: str
-    image: Path
-        
+    image: Path        
 
 def get_machines_info() -> list[MachineInfo]:
     machines = []

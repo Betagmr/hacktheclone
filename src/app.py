@@ -1,62 +1,20 @@
-from enum import Enum
+from config import Page
 
 import streamlit as st
 
-
-class Page(int, Enum):
-    LOGIN = 1
-    REGISTER = 2
-    APP = 3
+from login import login
+from register import register
+from db import DBManager
 
 
 def app() -> None:
     username = st.session_state["username"]
+    db = st.session_state["database"]
     st.title("🎈 App Name")
     st.write(f"Hello {username}!")
 
-
-def login() -> None:
-    st.title("🎈 Login Page")
-
-    username = st.text_input("Username")
-    password = st.text_input("Password", type="password")
-
-    loginbutton = st.button("Login")
-    registerbutton = st.button("Sign Up")
-
-    if loginbutton:
-        if username == "admin" and password == "admin":
-            st.success("Logged in as admin")
-            st.session_state["islogged"] = Page.APP
-            st.session_state["username"] = username
-            st.experimental_rerun()
-        else:
-            st.error("Wrong username/password")
-
-    if registerbutton:
-        st.session_state["islogged"] = Page.REGISTER
-        st.experimental_rerun()
-
-
-def register() -> None:
-    st.title("🎈 Register Page")
-
-    st.text_input("Username")
-    password = st.text_input("Password", type="password")
-    repeat_password = st.text_input("Repeat password", type="password")
-
-    registerbutton = st.button("Sign Up")
-    cancelbutton = st.button("Cancel")
-
-    if registerbutton:
-        if password == repeat_password:
-            st.success("Registered")
-            st.session_state["islogged"] = Page.LOGIN
-            st.experimental_rerun()
-        else:
-            st.error("Passwords don't match")
-
-    if cancelbutton:
+    logoutbutton = st.button("Logout")
+    if logoutbutton:
         st.session_state["islogged"] = Page.LOGIN
         st.experimental_rerun()
 
@@ -64,6 +22,10 @@ def register() -> None:
 if __name__ == "__main__":
     if "islogged" not in st.session_state:
         st.session_state["islogged"] = Page.LOGIN
+
+    if "database" not in st.session_state:
+        st.session_state["database"] = DBManager()
+        st.session_state["database"].create_database()
 
     if st.session_state["islogged"] == Page.APP:
         app()
