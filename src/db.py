@@ -10,7 +10,7 @@ from models import Base, Image, Machine, User
 class DBManager:
     def __init__(self) -> None:
         self.db_path = Path().cwd() / "db.sqlite3"
-        self.engine = create_engine(rf"sqlite:///{self.db_path}", echo=True)
+        self.engine = create_engine(rf"sqlite:///{self.db_path}")
         Base.metadata.create_all(self.engine)
 
     # ADD METHODS
