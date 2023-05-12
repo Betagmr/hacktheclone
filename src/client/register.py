@@ -1,7 +1,7 @@
 import streamlit as st
-from db import DBManager
 
 from config import Page
+from db import DBManager
 
 
 def register() -> None:
@@ -21,7 +21,7 @@ def register() -> None:
             if not exists_username:
                 db.add_user(username, password)
                 st.success("Registered")
-                st.session_state["islogged"] = Page.LOGIN
+                st.session_state["page"] = Page.LOGIN
                 st.experimental_rerun()
             else:
                 st.error("Username already exists")
@@ -29,5 +29,5 @@ def register() -> None:
             st.error("Passwords don't match")
 
     if cancelbutton:
-        st.session_state["islogged"] = Page.LOGIN
+        st.session_state["page"] = Page.LOGIN
         st.experimental_rerun()

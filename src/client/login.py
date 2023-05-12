@@ -1,7 +1,7 @@
 import streamlit as st
-from db import DBManager
 
 from config import Page
+from db import DBManager
 
 
 def login() -> None:
@@ -11,8 +11,11 @@ def login() -> None:
     username = st.text_input("Username")
     password = st.text_input("Password", type="password")
 
-    loginbutton = st.button("Login")
-    registerbutton = st.button("Sign Up")
+    col_1, col_2 = st.columns([1, 8.5])
+    with col_1:
+        loginbutton = st.button("Login")
+    with col_2:
+        registerbutton = st.button("Sign Up")
 
     if loginbutton:
         is_valid_user = db.validate_user(username, password)
@@ -20,10 +23,10 @@ def login() -> None:
             st.error("Wrong username/password")
         else:
             st.success("Logged in as user")
-            st.session_state["islogged"] = Page.APP
+            st.session_state["page"] = Page.APP
             st.session_state["username"] = username
             st.experimental_rerun()
 
     if registerbutton:
-        st.session_state["islogged"] = Page.REGISTER
+        st.session_state["page"] = Page.REGISTER
         st.experimental_rerun()
