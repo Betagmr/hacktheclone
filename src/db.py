@@ -1,16 +1,17 @@
 from hashlib import md5
 from pathlib import Path
 
-from sqlalchemy import create_engine
+from sqlalchemy import and_, create_engine
 from sqlalchemy.orm import Session
 
-from models import Image, Machine, User
+from models import Base, Image, Machine, User
 
 
 class DBManager:
     def __init__(self) -> None:
-        self.db_path = Path().cwd() / "database.db"
+        self.db_path = Path().cwd() / "db.sqlite3"
         self.engine = create_engine(rf"sqlite:///{self.db_path}")
+        Base.metadata.create_all(self.engine)
 
     # ADD METHODS
     def add_machine(self, user_id: int, image_id: int, container_id: str) -> None:
@@ -83,24 +84,38 @@ class DBManager:
         with Session(self.engine) as session:
             encrypted_password = md5(bytes(password, "utf-8")).hexdigest()
             user = (
-                session.query(User)
+                session.query(User.username, User.password)
                 .filter(
-                    User.username == username,
-                    User.password == encrypted_password,
+                    and_(
+                        User.username == username,
+                        User.password == encrypted_password,
+                    )
                 )
                 .first()
             )
 
-            return user is not None
+        return user is not None
+
+    def exists_username(self, username: str) -> bool:
+        with Session(self.engine) as session:
+            user = (
+                session.query(User)
+                .filter(
+                    User.username == username,
+                )
+                .first()
+            )
+
+        return user is not None
 
     def validate_flag(self, image_id: int, flag: str) -> bool:
         with Session(self.engine) as session:
             image = session.query(Image).filter(Image.id == image_id).first()
 
-            if image:
-                return image.flag == flag
+        if image:
+            return image.flag == flag
 
-            raise RuntimeError("Enter a valid image id")
+        raise RuntimeError("Enter a valid image id")
 
     # GET METHODS
     def get_user_machines(self, user_id: int) -> list[Machine]:

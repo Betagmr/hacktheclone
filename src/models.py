@@ -33,6 +33,7 @@ class Machine(Base):
 
 class Image(Base):
     __tablename__ = "image"
+
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     flag: Mapped[str] = mapped_column(String(50))
     image_name: Mapped[str] = mapped_column(String(30))
