@@ -24,6 +24,7 @@ def get_machines_info() -> list[MachineInfo]:
         container_path = MACHINE_FOLDER / container
 
         image = container_path / "image.png"
+        image = image if image.exists() else None
 
         flag_path = container_path / "root.txt"
         with open(flag_path, "r") as file:

@@ -72,6 +72,7 @@ def mainpage() -> None:
     select_box = st.selectbox(
         "Available machines",
         sorted([machine.container_name for machine in machile_list]),
+        disabled=machine_ip is not None,
     )
     selected_machine = next(
         machine for machine in machile_list if machine.container_name == select_box
@@ -87,7 +88,10 @@ def mainpage() -> None:
         )
     with col2:
         st.write("")
-        st.image("./assets/placeholder.png", use_column_width=True)
+        if selected_machine.image:
+            st.image(str(selected_machine.image), use_column_width=True)
+        else:
+            st.image("./assets/placeholder.png", use_column_width=True)
 
     if machine_ip:
         st.info(f"Machine IP: {machine_ip}", icon="🤖")
