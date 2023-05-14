@@ -7,7 +7,7 @@ from machine_controller import MachineController
 from utils import get_machines_info
 
 
-def main():
+def main() -> None:
     if "page" not in st.session_state:
         st.session_state["page"] = Page.LOGIN
         st.session_state["database"] = DBManager()
