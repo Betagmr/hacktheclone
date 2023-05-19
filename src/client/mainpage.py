@@ -28,6 +28,8 @@ def render_machine_info(
     st.header(selected_machine.display_name)
     st.write(f"Difficulty: {':star:' * 5}")
     st.write(f"State: {state}")
+    error = None
+    success = None
 
     cont_col1, cont_col2, cont_col3 = st.columns([1, 1, 1])
     with cont_col1:
@@ -39,20 +41,36 @@ def render_machine_info(
                 st.session_state["machine_ip"] = mc_controller.get_container_ip(container)
                 st.experimental_rerun()
             else:
-                st.error("Machine already running - Stop it first")
+                error = "Machine already running - Stop it first"
 
     with cont_col2:
         stop_button = st.button("Stop", use_container_width=True)
         if stop_button:
-            mc_controller.stop_running_machine()
-            st.session_state["machine_ip"] = None
-            st.experimental_rerun()
+            if machine_ip:
+                container = mc_controller.stop_running_machine()
+                mc_controller.delete_stopped_machine(container)
+                st.session_state["machine_ip"] = None
+                st.experimental_rerun()
+            else:
+                error = "No machine running - Start one first"
 
     with cont_col3:
-        start_button = st.button("Reset", use_container_width=True)
+        reset_button = st.button("Reset", use_container_width=True)
+        if reset_button:
+            if machine_ip:
+                container = mc_controller.reset_running_machine()
+                st.session_state["machine_ip"] = mc_controller.get_container_ip(container)
+                st.experimental_rerun()
+            else:
+                error = "No machine running - Start one first"
+
+    if error:
+        st.error(error)
+
+    if success:
+        st.success(success)
 
     st.write("")
-
     root_field = st.text_input("Flag", placeholder="Insert flag here...")
     submit = st.button("Submit", use_container_width=True)
 

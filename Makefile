@@ -18,8 +18,14 @@ update: requirements.txt
 install:
 	$(PI) install virtualenv
 	$(PY) -m virtualenv $(VENV) --python=3.10
-	$(PIP) install pip-tools
+	$(PIP) install pip-tools --upgrade pip
 	$(PYTHON) -m piptools sync ./requirements.txt
+
+compile:
+	python3 -m piptools compile --extra=dev
+
+sync:
+	python3 -m piptools sync ./requirements.txt
 
 clean:
 	rm -rf .mypy_cache

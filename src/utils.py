@@ -15,6 +15,10 @@ class MachineInfo:
     def display_name(self) -> str:
         return self.container_name.replace("_", " ").title()
 
+    @property
+    def tag(self) -> str:
+        return f"hacktheclone_{self.container_name}"
+
 
 def get_machines_info() -> list[MachineInfo]:
     machines = []

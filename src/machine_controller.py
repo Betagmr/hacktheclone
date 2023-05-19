@@ -32,8 +32,16 @@ class MachineController:
     def run_machine(self, image: Image) -> Container:
         if not self.running_machine:
             self.running_machine = self.client.containers.run(
-                image=image, detach=True, network_mode="bridge"
+                image=image,
+                detach=True,
+                network_mode="bridge",
+                name="hacktheclone_machine",
             )
+
+            for container in self.container_list:
+                if container.name != "hacktheclone_machine":
+                    container.remove()
+
             return self.running_machine
 
         raise RuntimeError("Machine already running - Stop it first")
@@ -43,6 +51,7 @@ class MachineController:
             image = self.running_machine.image
             self.running_machine.stop()
             self.running_machine.remove()
+            self.running_machine = None
 
             return self.run_machine(image)
 
@@ -69,3 +78,6 @@ class MachineController:
 
     def delete_stopped_machine(self, machine: Container) -> Container:
         return machine.remove()
+
+    def delete_image(self, image: Image) -> Image:
+        return image.remove()
