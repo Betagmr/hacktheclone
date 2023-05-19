@@ -12,9 +12,9 @@ def render_header(username: str) -> None:
     with name_col:
         st.write(f"Welcome {username}!")
     with logout_col:
-        logoutbutton = st.button("Logout")
+        logout_button = st.button("Logout")
 
-    if logoutbutton:
+    if logout_button:
         st.session_state["page"] = Page.LOGIN
         st.experimental_rerun()
 
@@ -63,7 +63,7 @@ def mainpage() -> None:
     username = st.session_state["username"]
     db = st.session_state["database"]
     mc_controller = st.session_state["machine_controller"]
-    machile_list = st.session_state["machine_list"]
+    machine_list = st.session_state["machine_list"]
     machine_ip = st.session_state["machine_ip"]
     state = "🟢" if machine_ip else "🔴"
 
@@ -71,11 +71,11 @@ def mainpage() -> None:
 
     select_box = st.selectbox(
         "Available machines",
-        sorted([machine.container_name for machine in machile_list]),
+        sorted([machine.container_name for machine in machine_list]),
         disabled=machine_ip is not None,
     )
     selected_machine = next(
-        machine for machine in machile_list if machine.container_name == select_box
+        machine for machine in machine_list if machine.container_name == select_box
     )
 
     col1, col2 = st.columns([1, 1])

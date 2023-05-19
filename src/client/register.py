@@ -12,10 +12,10 @@ def register() -> None:
     password = st.text_input("Password", type="password")
     repeat_password = st.text_input("Repeat password", type="password")
 
-    registerbutton = st.button("Sign Up")
-    cancelbutton = st.button("Cancel")
+    register_button = st.button("Sign Up")
+    cancel_button = st.button("Cancel")
 
-    if registerbutton:
+    if register_button:
         if password == repeat_password:
             exists_username = db.exists_username(username)
             if not exists_username:
@@ -28,6 +28,6 @@ def register() -> None:
         else:
             st.error("Passwords don't match")
 
-    if cancelbutton:
+    if cancel_button:
         st.session_state["page"] = Page.LOGIN
         st.experimental_rerun()

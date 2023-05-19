@@ -13,11 +13,11 @@ def login() -> None:
 
     col_1, col_2 = st.columns([1, 8.5])
     with col_1:
-        loginbutton = st.button("Login")
+        login_button = st.button("Login")
     with col_2:
-        registerbutton = st.button("Sign Up")
+        register_button = st.button("Sign Up")
 
-    if loginbutton:
+    if login_button:
         is_valid_user = db.validate_user(username, password)
         if not is_valid_user:
             st.error("Wrong username/password")
@@ -27,6 +27,6 @@ def login() -> None:
             st.session_state["username"] = username
             st.experimental_rerun()
 
-    if registerbutton:
+    if register_button:
         st.session_state["page"] = Page.REGISTER
         st.experimental_rerun()

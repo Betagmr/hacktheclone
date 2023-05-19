@@ -28,7 +28,7 @@ class Machine(Base):
     container_id: Mapped[str] = mapped_column(String(50))
 
     def __repr__(self) -> str:
-        return f"MAHINE - {self.status}"
+        return f"MACHINE - {self.status}"
 
 
 class Image(Base):

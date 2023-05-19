@@ -58,7 +58,7 @@ class MachineController:
 
         raise RuntimeError("No machine running - Start one first")
 
-    def start_stoped_machine(self, machine: Container) -> Container:
+    def start_stopped_machine(self, machine: Container) -> Container:
         if not self.running_machine:
             self.running_machine = machine
             self.running_machine.start()
@@ -67,5 +67,5 @@ class MachineController:
 
         raise RuntimeError("Machine already running - Stop it first")
 
-    def delete_stoped_machine(self, machine: Container) -> Container:
+    def delete_stopped_machine(self, machine: Container) -> Container:
         return machine.remove()
